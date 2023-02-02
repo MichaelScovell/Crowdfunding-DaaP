@@ -41,7 +41,7 @@ contract CrowdFunding {
         campaign.amountCollected = 0;
         campaign.image = _image;
 
-        // Increment the number of campagins 
+        // Increment the number of campaigns 
         numberOfCampaigns++;
 
         // Return the index of the recently created campaign
@@ -72,7 +72,11 @@ contract CrowdFunding {
     }
 
     // Define a function to retrieve a list of donators to a given campaign
-    function getDontators() {}
+    function getDontators(uint256 _id) view public returns(address[] memory, uint256[] memory ) {
+        
+        // Return the addresses of the dontators and their donations for the specified campaign
+        return (campaigns[_id].donators, campaigns[_id].dontations);
+    }
 
     // Define a function to retrieve a list of campaigns
     function getCampaigns() {}
