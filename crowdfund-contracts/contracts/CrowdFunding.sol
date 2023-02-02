@@ -13,7 +13,7 @@ contract CrowdFunding {
         uint256 amountCollected;
         string image;
         address[] donators;
-        uint256 dontations;
+        uint256[] dontations;
     }
 
     // Mapping our Campgains struct to the public campgains variable to invoke it
@@ -25,7 +25,7 @@ contract CrowdFunding {
     // Defining a function for creating campaigns
     function createCampaign(address _owner, string memory _title, string memory _description, 
     uint256 _target, uint256 _deadline, string memory _image) public returns (uint256) {
-        
+
         // Defining a variable to store campaigns
         Campaign storage campaign = campaigns[numberOfCampaigns];
 
@@ -50,7 +50,26 @@ contract CrowdFunding {
     }
 
     // Defining a function for dontating to a campaign
-    function donateToCampaign() {}
+    function donateToCampaign(uint256 _id) public payable {
+        // Define a variable for storing the donation
+        uint256 amount = msg.value;
+
+        // Retrieve the campagin that the dontations is being made to through the id
+        Campaign storage campaign = campaigns[_id];
+        
+        // Dontate (via pushing the address and then the amount)
+        campaign.donators.push(msg.sender);
+        campaign.dontations.push(amount);
+
+        // Check whether the transcation has been sent
+        (bool sent,) = payable(campaign.owner).call{value: amount}("");
+
+        if (sent) {
+            // Update the collected amount for the campaign with the recently sent donation
+            campaign.amountCollected = campaign.amountCollected + amount;
+        }
+
+    }
 
     // Define a function to retrieve a list of donators to a given campaign
     function getDontators() {}
