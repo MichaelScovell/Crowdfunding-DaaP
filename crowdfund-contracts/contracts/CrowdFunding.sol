@@ -73,11 +73,22 @@ contract CrowdFunding {
 
     // Define a function to retrieve a list of donators to a given campaign
     function getDontators(uint256 _id) view public returns(address[] memory, uint256[] memory ) {
-        
+
         // Return the addresses of the dontators and their donations for the specified campaign
         return (campaigns[_id].donators, campaigns[_id].dontations);
     }
 
     // Define a function to retrieve a list of campaigns
-    function getCampaigns() {}
+    function getCampaigns() public view returns (Campaign[] memory) {
+        // Define a variable to store all the campaigns
+        Campaign[] memory allCampaigns = new Campaign[](numberOfCampaigns); // Creating a new empty array of Campaign within the allCampaigns variable
+
+        // Retrieve the campaigns and populate the allCampaigns variable with the campaigns details
+        for (uint i = 0; i < numberOfCampaigns; i++) {
+            Campaign storage item = campaigns[i];
+            allCampaigns[i] = item;
+        }
+
+        return allCampaigns;
+    }
 }
