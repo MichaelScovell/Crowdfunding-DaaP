@@ -83,6 +83,35 @@ export const StateContextProvider = ({ children }) => {
     return filteredCampaigns;
   };
 
+  // Define a function for donating to a campaign
+  const donate = async (pId, amount) => {
+    // Calling the donateToCampaign function from our smart contract and store it in a variable
+    const data = await contract.call("donateToCampaign", pId, {
+      value: ethers.utils.parseEther(amount),
+    });
+    return data;
+  };
+
+  // Define a function to fetch all donations for a campaign
+  const getDonations = async (pId) => {
+    // Calling the getDonators function from our smart contract and store it in a variable
+    const donations = await contract.call("getDontators", pId);
+    // Define a variable for the returned array of donations for a campaign
+    const numberOfDonations = donations[0].length;
+    // Define a variable for storing the parsed donation data
+    const parsedDonations = [];
+
+    // Define a loop that will iterate over the number of donations and populate the parsedDonations array with parsed donation data for a particular campaign
+    for (let i = 0; i < numberOfDonations; i++) {
+      parsedDonations.push({
+        donator: donations[0][i],
+        donation: ethers.utils.formatEther(donations[1][i].toString()),
+      });
+    }
+
+    return parsedDonations;
+  };
+
   return (
     <StateContext.Provider
       value={{
@@ -92,6 +121,8 @@ export const StateContextProvider = ({ children }) => {
         createCampaign: publishCampaign,
         getCampaigns,
         getUserCampaigns,
+        donate,
+        getDonations,
       }}
     >
       {children}

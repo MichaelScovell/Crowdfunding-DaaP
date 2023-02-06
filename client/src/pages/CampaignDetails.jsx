@@ -11,7 +11,7 @@ const CampaignDetails = () => {
   // Defining variables for router location
   const { state } = useLocation();
   // Defining variables for our StateContext
-  const { getDontations, contract, address } = useStateContext();
+  const { donate, getDonations, contract, address } = useStateContext();
 
   // Defining variables for state
   const [isLoading, setIsLoading] = useState(false);
@@ -20,7 +20,28 @@ const CampaignDetails = () => {
 
   // Defining a variable for the number of remaining days for the campaign (days left)
   const remainingDays = daysLeft(state.deadline);
-  const handleDonate = async () => {};
+
+  // Defining a function to fetch the donators for a campaign
+  const fetchDonators = async () => {
+    // Define a variable for storing our retrieved donators for a campaign
+    const data = await getDonations(state.pId);
+    setDonators(data);
+  };
+
+  // Defining a function to interact with our context for donating
+  const handleDonate = async () => {
+    // Set is Loading to true
+    setIsLoading(true);
+    // Call the donate function
+    await donate(state.pId, amount);
+    setIsLoading(false);
+  };
+
+  // Define a useEffect hook to run when our details are being fetched
+  useEffect(() => {
+    if (contract) fetchDonators();
+  }, [contract, address]);
+
   return (
     <div>
       {/* Campaign Details */}
@@ -97,7 +118,19 @@ const CampaignDetails = () => {
             </h4>
             <div className="mt-[20px] flex flex-col gap-4">
               {donators.length > 0 ? (
-                donators.map((item, index) => <div>DONATOR</div>)
+                donators.map((item, index) => (
+                  <div
+                    key={`${item.donator}-${index}`}
+                    className="flex justify-between items-center gap-4"
+                  >
+                    <p className="font-epilogue font-normal text-[16px] text-[#b2b3bd] leading-[26px] break-11">
+                      {index + 1}. {item.donator}
+                    </p>
+                    <p className="font-epilogue font-normal text-[16px] text-[#808191] leading-[26px] break-11">
+                      {item.donation}
+                    </p>
+                  </div>
+                ))
               ) : (
                 <p className="font-epilogue font-normal text-[16px] text-[#808191] leading-[26px] text-justify">
                   No Donators yet. Be the first to donate to this campaign
