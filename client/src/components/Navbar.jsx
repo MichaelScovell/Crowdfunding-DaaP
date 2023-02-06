@@ -13,7 +13,7 @@ import { useStateContext } from "../context";
 // Navbar
 const Navbar = () => {
   // Defining variables for state and navigation
-  const navigate = useNavigate;
+  const navigate = useNavigate();
   const [isActive, setisActive] = useState("dashboard");
   const [toggleDrawer, setToggleDrawer] = useState(false);
   const { connect, address } = useStateContext();
