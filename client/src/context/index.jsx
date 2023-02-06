@@ -70,6 +70,19 @@ export const StateContextProvider = ({ children }) => {
     return parsedCampaigns;
   };
 
+  // Defining a function to fetch the logged in users created campaigns
+  const getUserCampaigns = async () => {
+    // Fetch all campaigns from the getCampaigns function
+    const allCampaigns = await getCampaigns();
+    // Filter the campaigns to only return campaigns created by the user (connected metamask account)
+    const filteredCampaigns = allCampaigns.filter(
+      (campaign) => campaign.owner === address
+    );
+
+    // Return
+    return filteredCampaigns;
+  };
+
   return (
     <StateContext.Provider
       value={{
@@ -78,6 +91,7 @@ export const StateContextProvider = ({ children }) => {
         connect,
         createCampaign: publishCampaign,
         getCampaigns,
+        getUserCampaigns,
       }}
     >
       {children}
