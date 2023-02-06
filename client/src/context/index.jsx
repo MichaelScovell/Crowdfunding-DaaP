@@ -47,6 +47,29 @@ export const StateContextProvider = ({ children }) => {
     }
   };
 
+  // Defining a function to get all the campaigns published to the blockchain from the contract
+  const getCampaigns = async () => {
+    // Defining a variable to store the results of the getCampaigns smart contract function
+    const campaigns = await contract.call("getCampaigns");
+
+    // Formatting the returned fetched data into a readable format
+    const parsedCampaigns = campaigns.map((campaign, i) => ({
+      // Format of the parsed data
+      owner: campaign.owner,
+      title: campaign.title,
+      description: campaign.description,
+      target: ethers.utils.formatEther(campaign.target.toString()),
+      deadline: campaign.deadline.toNumber(),
+      amountCollected: ethers.utils.formatEther(
+        campaign.amountCollected.toString()
+      ),
+      image: campaign.image,
+      pId: i,
+    }));
+    // Return the parsedCampaign Data
+    return parsedCampaigns;
+  };
+
   return (
     <StateContext.Provider
       value={{
@@ -54,6 +77,7 @@ export const StateContextProvider = ({ children }) => {
         contract,
         connect,
         createCampaign: publishCampaign,
+        getCampaigns,
       }}
     >
       {children}
