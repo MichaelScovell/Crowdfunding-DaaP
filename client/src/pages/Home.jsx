@@ -7,7 +7,7 @@ import React, { useState, useEffect } from "react";
 import { useStateContext } from "../context";
 
 // Defining component imports
-import { DisplayCampaigns } from "../components/DisplayCampaigns";
+import { DisplayCampaigns } from "../components";
 
 const Home = () => {
   // Defining our variables to hold state
