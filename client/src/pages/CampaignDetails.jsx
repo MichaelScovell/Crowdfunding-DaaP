@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ethers } from "ethers";
 
 import { useStateContext } from "../context";
-import { CountBox, CustomButton } from "../components";
+import { CountBox, CustomButton, Loader } from "../components";
 import { calculateBarPercentage, daysLeft } from "../utils";
 import { thirdweb } from "../assets";
 
 const CampaignDetails = () => {
   // Defining variables for router location
   const { state } = useLocation();
+  const navigate = useNavigate();
   // Defining variables for our StateContext
   const { donate, getDonations, contract, address } = useStateContext();
 
@@ -34,6 +35,8 @@ const CampaignDetails = () => {
     setIsLoading(true);
     // Call the donate function
     await donate(state.pId, amount);
+    // Navigate back to home page
+    navigate("/");
     setIsLoading(false);
   };
 
@@ -44,6 +47,7 @@ const CampaignDetails = () => {
 
   return (
     <div>
+      {isLoading && <Loader />}
       {/* Campaign Details */}
       <div className="w-full flex md:flex-row flex-col mt-10 gap-[30px]">
         {/* Campaign Image */}
